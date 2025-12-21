@@ -3,28 +3,56 @@ package codesign.redtiger.jetbrainslivemarkdown
 import com.intellij.openapi.editor.event.EditorFactoryEvent
 import com.intellij.openapi.editor.event.EditorFactoryListener
 import com.intellij.openapi.fileEditor.FileDocumentManager
+import com.intellij.openapi.editor.ex.EditorEx
 
 class EditorManager : EditorFactoryListener {
     override fun editorCreated(event: EditorFactoryEvent) {
-        val editor = event.editor
-        editor.project ?: return
+        val editor = event.editor as? EditorEx ?: return
+        val project = editor.project ?: return
 
-        // 에디터와 연결된 가상 파일(VirtualFile)을 가져옵니다.
-        val document = editor.document
-        val virtualFile = FileDocumentManager.getInstance().getFile(document) ?: return
+        // 1. 해당 에디터가 마크다운 파일인지 확인 (선택 사항이지만 권장)
+        // val virtualFile = editor.virtualFile
+        // if (virtualFile?.extension != "md") return
 
-        // 파일 타입이 'Markdown'인지 확인합니다.
-        // build.gradle.kts에 'com.intellij.markdown' 의존성이 추가되어 있어야 합니다.
-        if (virtualFile.fileType.name == "Markdown") {
-            println("마크다운 파일 감지됨: ${virtualFile.name}")
+        // 2. 관리자 객체 생성 및 에디터에 귀속 (UserData에 저장하면 나중에 꺼내 쓰기 편함)
+        val manager = LiveImagePreviewManager(editor)
+        // editor.putUserData(PREVIEW_MANAGER_KEY, manager) // 키는 따로 정의 필요
 
-            // 마크다운 파일일 때만 리스너를 등록합니다.
-            editor.caretModel.addCaretListener(MarkdownLivePreviewListener())
-        }
+        // 3. 커서 리스너 추가 (여기서 추가합니다!)
+        editor.caretModel.addCaretListener(object : com.intellij.openapi.editor.event.CaretListener {
+            override fun caretPositionChanged(e: com.intellij.openapi.editor.event.CaretEvent) {
+                val oldLine = e.oldPosition.line
+                val newLine = e.newPosition.line
+
+                if (oldLine != newLine) {
+                    // 커서가 나간 줄은 다시 숨기고, 들어온 줄은 보이기
+                    manager.toggleFolding(oldLine, true)
+                    manager.toggleFolding(newLine, false)
+                }
+            }
+        })
+
+        editor.addEditorMouseListener(object : com.intellij.openapi.editor.event.EditorMouseListener {
+            override fun mouseClicked(e: com.intellij.openapi.editor.event.EditorMouseEvent) {
+                // 클릭된 좌표가 Inlay 영역인지 확인하고, 해당 라인으로 커서 강제 이동
+                val logicalPosition = editor.xyToLogicalPosition(e.mouseEvent.point)
+                editor.caretModel.moveToLogicalPosition(logicalPosition)
+            }
+        })
+
+        // 사용자가 타이핑할 때마다 이미지를 새로 고침
+        editor.document.addDocumentListener(object : com.intellij.openapi.editor.event.DocumentListener {
+            override fun documentChanged(event: com.intellij.openapi.editor.event.DocumentEvent) {
+                // 성능을 위해 짧은 디바운싱(Debouncing)을 넣는 것이 좋지만, 우선은 직접 호출
+                manager.updatePreviews()
+            }
+        })
+
+        // 4. 초기 화면 렌더링
+        manager.updatePreviews()
     }
 
     override fun editorReleased(event: EditorFactoryEvent) {
-        // 에디터가 닫힐 때 리스너가 메모리 누수를 일으키지 않도록 처리할 수 있지만,
-        // CaretListener는 에디터 생명주기에 종속적이므로 보통 자동 해제됩니다.
+        // 에디터가 닫힐 때 필요한 정리 작업이 있다면 여기서 수행
     }
 }
