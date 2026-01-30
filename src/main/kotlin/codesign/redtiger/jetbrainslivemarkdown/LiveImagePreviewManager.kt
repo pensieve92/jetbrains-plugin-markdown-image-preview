@@ -1,9 +1,6 @@
 package codesign.redtiger.jetbrainslivemarkdown
 
 import com.intellij.openapi.editor.Editor
-import com.intellij.openapi.editor.event.CaretEvent
-import com.intellij.openapi.editor.event.CaretListener
-import com.intellij.openapi.util.TextRange
 import java.util.regex.Pattern
 
 class LiveImagePreviewManager(private val editor: Editor) {
@@ -35,27 +32,6 @@ class LiveImagePreviewManager(private val editor: Editor) {
             )
             
             inlay?.let { activeInlays[lineIndex] = it }
-            
-            // 커서가 해당 라인에 없다면 텍스트 숨기기 (Folding)
-            toggleFolding(lineIndex, editor.caretModel.logicalPosition.line != lineIndex)
-        }
-    }
-
-    fun toggleFolding(lineIndex: Int, hide: Boolean) {
-        val start = editor.document.getLineStartOffset(lineIndex)
-        val end = editor.document.getLineEndOffset(lineIndex)
-        
-        editor.foldingModel.runBatchFoldingOperation {
-            val existingRegion = editor.foldingModel.getCollapsedRegionAtOffset(start)
-            if (hide && existingRegion == null) {
-                // 텍스트 숨기기: 가려진 텍스트 대신 빈 문자열("") 표시
-                editor.foldingModel.addFoldRegion(start, end, "")?.apply {
-                    isExpanded = false
-                }
-            } else if (!hide && existingRegion != null) {
-                // 커서가 들어오면 텍스트 다시 보이기
-                editor.foldingModel.removeFoldRegion(existingRegion)
-            }
         }
     }
 }

@@ -16,21 +16,6 @@ class EditorManager : EditorFactoryListener {
 
         // 2. 관리자 객체 생성 및 에디터에 귀속 (UserData에 저장하면 나중에 꺼내 쓰기 편함)
         val manager = LiveImagePreviewManager(editor)
-        // editor.putUserData(PREVIEW_MANAGER_KEY, manager) // 키는 따로 정의 필요
-
-        // 3. 커서 리스너 추가 (여기서 추가합니다!)
-        editor.caretModel.addCaretListener(object : com.intellij.openapi.editor.event.CaretListener {
-            override fun caretPositionChanged(e: com.intellij.openapi.editor.event.CaretEvent) {
-                val oldLine = e.oldPosition.line
-                val newLine = e.newPosition.line
-
-                if (oldLine != newLine) {
-                    // 커서가 나간 줄은 다시 숨기고, 들어온 줄은 보이기
-                    manager.toggleFolding(oldLine, true)
-                    manager.toggleFolding(newLine, false)
-                }
-            }
-        })
 
         editor.addEditorMouseListener(object : com.intellij.openapi.editor.event.EditorMouseListener {
             override fun mouseClicked(e: com.intellij.openapi.editor.event.EditorMouseEvent) {
