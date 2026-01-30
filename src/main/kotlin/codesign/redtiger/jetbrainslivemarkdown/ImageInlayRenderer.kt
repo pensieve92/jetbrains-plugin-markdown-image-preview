@@ -32,7 +32,11 @@ class ImageInlayRenderer(private val imagePath: String) : EditorCustomElementRen
 
     // Inlay가 차지할 높이 (이미지 높이)
     override fun calcHeightInPixels(inlay: Inlay<*>): Int {
-        return image?.getHeight(null) ?: 20
+        image?.let {
+            return image?.getHeight(null) ?: 20
+        } ?: run {
+            return 0
+        }
     }
 
     // 실제 에디터 화면에 그리는 로직
@@ -44,8 +48,9 @@ class ImageInlayRenderer(private val imagePath: String) : EditorCustomElementRen
     ) {
         image?.let {
             g.drawImage(it, targetRegion.x.toInt(), targetRegion.y.toInt(), null)
-        } ?: run {
-            g.drawString("Image not found: $imagePath", targetRegion.x.toInt(), targetRegion.y.toInt())
         }
+//            ?: run {
+//            g.drawString("Image not found: $imagePath", targetRegion.x.toInt(), 10)
+//        }
     }
 }
