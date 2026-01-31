@@ -25,6 +25,15 @@
     <!-- Extension points defined by the plugin.
          Read more: https://plugins.jetbrains.com/docs/intellij/plugin-extension-points.html -->
     <extensions defaultExtensionNs="com.intellij">
+        <!-- 이미지 붙여넣기 처리를 위한 커스텀 액션 핸들러 등록 -->
+        <editorActionHandler action="EditorPaste"
+                             implementationClass="codesign.redtiger.jetbrainslivemarkdown.ImagePasteActionHandler"
+                             id="ImagePasteActionHandler"
+                             order="first"/>
+
+        <!-- 이미지 저장 실패 등 알림을 위한 그룹 등록 -->
+        <notificationGroup id="Markdown Live Preview Notifications" displayType="BALLOON"/>
+
         <editorFactoryListener implementation="codesign.redtiger.jetbrainslivemarkdown.EditorManager"/>
         <projectConfigurable instance="codesign.redtiger.jetbrainslivemarkdown.MarkdownPreviewConfigurable"
                              displayName="Markdown Live Preview"
