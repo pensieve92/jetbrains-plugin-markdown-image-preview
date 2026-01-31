@@ -7,7 +7,6 @@ import java.awt.Image
 import java.awt.geom.Rectangle2D
 import java.io.File
 import javax.imageio.ImageIO
-import javax.swing.ImageIcon
 
 class ImageInlayRenderer(private val imagePath: String) : EditorCustomElementRenderer {
 
@@ -49,8 +48,5 @@ class ImageInlayRenderer(private val imagePath: String) : EditorCustomElementRen
         image?.let {
             g.drawImage(it, targetRegion.x.toInt(), targetRegion.y.toInt(), null)
         }
-//            ?: run {
-//            g.drawString("Image not found: $imagePath", targetRegion.x.toInt(), 10)
-//        }
     }
 }
