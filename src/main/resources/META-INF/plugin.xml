@@ -1,21 +1,31 @@
 <!-- Plugin Configuration File. Read more: https://plugins.jetbrains.com/docs/intellij/plugin-configuration-file.html -->
 <idea-plugin>
     <!-- Unique identifier of the plugin. It should be FQN. It cannot be changed between the plugin versions. -->
-    <id>codesign.redtiger.jetbrains-live-markdown</id>
+    <id>codesign.redtiger.markdown-live-image</id>
 
     <!-- Public plugin name should be written in Title Case.
          Guidelines: https://plugins.jetbrains.com/docs/marketplace/plugin-overview-page.html#plugin-name -->
-    <name>Live Markdown</name>
+    <name>Markdown Live Image</name>
 
     <!-- A displayed Vendor name or Organization ID displayed on the Plugins Page. -->
-    <vendor email="pensieve92@gmail.com" url="https://www.yourcompany.com">Codesign</vendor>
+    <vendor email="pensieve92@gmail.com">Codesign</vendor>
 
     <!-- Description of the plugin displayed on the Plugin Page and IDE Plugin Manager.
          Simple HTML elements (text formatting, paragraphs, and lists) can be added inside of <![CDATA[ ]]> tag.
          Guidelines: https://plugins.jetbrains.com/docs/marketplace/plugin-overview-page.html#plugin-description -->
     <description><![CDATA[
-    Enter short description for your plugin here.<br>
-    <em>most HTML tags may be used</em>
+    <h2>Visual & Organized Markdown Editing</h2>
+    <p><b>Live Markdown</b> enhances your IntelliJ IDEA experience by bringing seamless image management and real-time visual feedback directly into your Markdown editor.</p>
+
+    <h3>Main Features:</h3>
+    <ul>
+        <li><b>Inline Image Rendering:</b> No more separate preview windows! View images directly within the editor's text area as you type. It provides a true "What You See Is What You Get" experience for your documentation.</li>
+        <li><b>Flexible Storage Paths:</b> Take full control of your project structure. You can customize exactly where pasted images are stored, ensuring your assets are organized according to your project's conventions.</li>
+        <li><b>Smart Image Paste:</b> Paste images directly from your clipboard. The plugin automatically saves the file to your designated directory and generates the Markdown link instantly.</li>
+        <li><b>Seamless Workflow:</b> Reduce context switching and focus on content by seeing your visuals and text in one unified workspace.</li>
+    </ul>
+
+    <p>Streamline your documentation process with organized image management and instant inline previews.</p>
   ]]></description>
 
     <!-- Product and plugin compatibility requirements.
