@@ -2,17 +2,15 @@ package codesign.redtiger.jetbrainslivemarkdown
 
 import com.intellij.openapi.editor.event.EditorFactoryEvent
 import com.intellij.openapi.editor.event.EditorFactoryListener
-import com.intellij.openapi.fileEditor.FileDocumentManager
 import com.intellij.openapi.editor.ex.EditorEx
+import org.intellij.plugins.markdown.lang.MarkdownFileType
 
 class EditorManager : EditorFactoryListener {
     override fun editorCreated(event: EditorFactoryEvent) {
         val editor = event.editor as? EditorEx ?: return
-        val project = editor.project ?: return
-
         // 1. 해당 에디터가 마크다운 파일인지 확인 (선택 사항이지만 권장)
-        // val virtualFile = editor.virtualFile
-        // if (virtualFile?.extension != "md") return
+        val virtualFile = editor.virtualFile ?: return
+        if (virtualFile.fileType != MarkdownFileType.INSTANCE) return
 
         // 2. 관리자 객체 생성 및 에디터에 귀속 (UserData에 저장하면 나중에 꺼내 쓰기 편함)
         val manager = LiveImagePreviewManager(editor)
