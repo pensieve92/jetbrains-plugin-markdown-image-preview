@@ -5,7 +5,7 @@ plugins {
 }
 
 group = "codesign.redtiger"
-version = "1.0-SNAPSHOT"
+version = "1.0.0"
 
 repositories {
     mavenCentral()
@@ -18,7 +18,6 @@ intellij {
     type.set("IC") // Target IDE Platform
 
     plugins.set(listOf("org.intellij.plugins.markdown"))
-
 }
 
 tasks {
@@ -32,8 +31,20 @@ tasks {
     }
 
     patchPluginXml {
-        sinceBuild.set("222")
-        untilBuild.set("232.*")
+        sinceBuild.set("231")
+//        untilBuild.set("232.*")
+    }
+
+    runPluginVerifier {
+        // 검증하고 싶은 IDE 버전들을 리스트로 넣습니다.
+        ideVersions.set(listOf(
+            "IC-2023.1.7",
+            "IC-2023.2.5",
+            "IC-2024.1.6",
+            "IC-2024.3.2",
+            "IC-2025.1.7",
+            "IC-2025.2.3",
+        ))
     }
 
     signPlugin {
